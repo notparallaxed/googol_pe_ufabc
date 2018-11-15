@@ -5,13 +5,18 @@
 *           Vinicius Teixeira           *
 *****************************************/
 #include <stdio.h>
+#include <stdlib.h>
 
 #define MAX_SIZE 1003
 
-void imprimeNumerao(char numerao[MAX_SIZE], int tam);
 int sanitizeNumerao(char numerao[MAX_SIZE]);
 
-/* return tamNumeraoResultado */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **
+ *  Todas as funcoes abaixo somente funcionam se o numerao estiver sanitizado, ou seja, *
+ *  tenha passado pela funcao "sanitizeNumerao".                                        *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+
+void imprimeNumerao(char numerao[MAX_SIZE], int tam);
 int soma(char numerao1[MAX_SIZE], int n1, char numerao2[MAX_SIZE], int n2, char *numeraoResultado);
 
 int main() {
@@ -46,13 +51,12 @@ int main() {
     return 0;
 }
 
-void imprimeNumerao(char numerao[MAX_SIZE], int tam) {
-    int i;
-    for(i = 0; i < tam; i++) {
-        printf("%c", numerao[i]);
-    }
-}
-
+/* Sanitiza os numeros em ordem no menos significativo para o mais significativo
+   >>preserva o sinal de negativo na frente do numerao<< 
+   Recebe:
+    char numerao: vetor de char corresponde ao numerao
+   Retorna: 
+    int size: tamanho do numerao sanitizado */
 int sanitizeNumerao(char numerao[MAX_SIZE]) {
     char numerao_copy[MAX_SIZE];
     int i = 0, size = -1;
@@ -61,6 +65,7 @@ int sanitizeNumerao(char numerao[MAX_SIZE]) {
     while(size == -1 && i < MAX_SIZE) {
         if(numerao[i] == '\0'){
            size = i;
+           break;   
         }
         i++;
     }
@@ -85,6 +90,39 @@ int sanitizeNumerao(char numerao[MAX_SIZE]) {
     return size;  
 }
 
+/* Imprime numerao sanitizado 
+   Recebe:
+    char numerao: vetor de char corresponde ao numerao a ser impresso
+    int tam: inteiro correspondente ao tamanho do numerao
+   Retorna: 
+    nada    */
+void imprimeNumerao(char numerao[MAX_SIZE], int tam) {
+    int i;
+    /* caso o numero negativo, imprime o sinal antes do numero */
+    if(numerao[0] == '-'){
+        printf("%c", numerao[0]);
+        for(i = 0; i < tam; i++) {
+            printf("%c", numerao[tam - i]);
+        }
+    }else {
+        for(i = 0; i < tam; i++) {
+            printf("%c", numerao[(tam - i) - 1]);
+        }
+    }
+
+    printf("\n");
+}
+
+/*
+   Recebe: 
+    char numerao1: vetor de char correspondente ao primeiro numero
+    int n1: tamanho do vetor numerao1
+    char numerao2: vetor de char corresponde ao segundo numero
+    int n2: tamanho do vetor numerao2
+    char *numeraoResultado: ponteiro de char que contera o resultado da soma
+   Retorna:
+    int tam: tamanho do numeraoResultado  */
 int soma(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2, char *numeraoResultado) {
-    /*falta implementar essa bagaça aqui*/
+    /*falta implementar */
+    
 }
