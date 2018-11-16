@@ -126,7 +126,8 @@ void imprimeNumerao(char numerao[MAX_SIZE], int tam) {
    Retorna:
     int tam: novo tamanho do numerao1  */
 int soma(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2) {
-    int i, tam = 0, calculated = 0, rest = 0;    
+    int i, tam = 0, calculated = 0, rest = 0;
+    char cache;
 
     /* define o tamanho preliminar do array */
     tam = tam1 > tam2 ? tam1 : tam2;
@@ -164,7 +165,19 @@ int soma(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2) {
             numerao1[tam - 1] = '1';
         }
     }
-    /* caso 2: um dos numeros seja positivo e outro negativo (implementar) */
+    /* caso 2: o primeiro numero positivo e o segundo negativo */
+    else if (numerao1[0] != '-' && numerao2[0] == '-') {
+        /* Remover o sinal negativo do segundo numero */
+        for (i = 0; i < (tam2 - 1); i++) {
+            cache = numerao2[i + 1];
+            numerao2[i + 1] = numerao2[i];
+            numerao2[i] = cache;
+        }
+        tam2--;
+        /* Enviar para a função subtracao */
+        tam = subtracao(numerao1, tam1, numerao2, tam2);
+    }
+    /* caso 3: o primeiro numero negativo e o segundo positivo (implementar) */
     return tam;
 }
 
@@ -175,7 +188,7 @@ int soma(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2) {
     char numerao2: vetor de char corresponde ao segundo numero
     int n2: tamanho do vetor numerao2
    Retorna:
-    int tam: tamanho do novo tamanho do numerao1  */
+    int tam: novo tamanho do numerao1  */
 int subtracao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2) {
     int i, j, tam = 0, maior = 0, calculated = 0;
 
@@ -233,12 +246,15 @@ int subtracao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int ta
                 if (i < tam1) {
                     calculated -= (numerao1[i] - '0');
                 }
+                /* caso o numero precise pegar uma unidade emprestada do casa vizinha */
                 if (calculated < 0) {
                     j = i + 1;
                     while (j < tam) {
+                        /* verificar se o algarismo é diferente de zero */
                         if (numerao2[j] != '0') {
                             numerao2[j] -= 1;
                             break;
+                        /* se algarismo igual a zero procurar na casa seguinte*/
                         } else {
                             numerao2[j] += 10;
                             j++;
