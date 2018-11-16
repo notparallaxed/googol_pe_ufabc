@@ -273,12 +273,22 @@ int subtracao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int ta
             }
         }
     }
-    /* IMPLEMENTAR codigos abaixo */
     /* procurar e elimimnar zeros a esquerda da contagem do tamanho */
+    for (i = (tam - 1); i >= 0; i--) {
+        /* terminar laço caso encontre um numero diferente de zero */
+        if (numerao1[i] != '0') {
+            break;
+        /* se o ultimo numero é igual a zero */
+        } else if (i == 0) {
+            numerao1[0] = '0';
+        /* se extorem zeros a esquerda remover uma unidade do tamanho */
+        } else {
+            tam--;
+        }
+    }
     
-    
+    /* IMPLEMENTAR codigos abaixo */
     /* Inserir o sinal negativo no inicio do numero */
 
-    
     return tam;
 }
