@@ -191,6 +191,7 @@ int soma(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2) {
     int tam: novo tamanho do numerao1  */
 int subtracao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2) {
     int i, j, tam = 0, maior = 1, calculated = 0;
+    char cache;
 
     /* define o tamanho preliminar do array e indicar qual é o maior numero (em módulo) */
     if (tam1 > tam2) {
@@ -272,6 +273,18 @@ int subtracao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int ta
                 numerao1[i] = '0' + calculated;
             }
         }
+    /* caso 2: se o segundo número é negativo, ele se transforma em positivo e é enviado para soma */
+    } else if (numerao2[0] == '-') {
+        /* Remover o sinal negativo do segundo numero */
+        for (i = 0; i < (tam2 - 1); i++) {
+            cache = numerao2[i + 1];
+            numerao2[i + 1] = numerao2[i];
+            numerao2[i] = cache;
+        }
+        tam2--;
+        /* Enviar para a função soma */
+        tam = soma(numerao1, tam1, numerao2, tam2);
+        return tam;
     }
     /* procurar e elimimnar zeros a esquerda da contagem do tamanho */
     for (i = (tam - 1); i >= 0; i--) {
