@@ -17,12 +17,14 @@ int sanitizeNumerao(char numerao[MAX_SIZE]);
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
 
 void imprimeNumerao(char numerao[MAX_SIZE], int tam);
-int soma(char numerao1[MAX_SIZE], int n1, char numerao2[MAX_SIZE], int n2, char *numeraoResultado);
+int soma(char numerao1[MAX_SIZE], int n1, char numerao2[MAX_SIZE], int n2, char **numeraoResultado);
 
 int main() {
-    char numerao1[MAX_SIZE], numerao2[MAX_SIZE], operador = ' ', *numeraoResultado; 
+    char numerao1[MAX_SIZE], numerao2[MAX_SIZE], operador = ' ', **numeraoResultado = NULL;
     int tam1 = 0, tam2 = 0, tam3 = 0;
     
+    numeraoResultado = malloc(sizeof(char));
+
     while(operador != '0'){
         /* primeira leitura (numero ou fim) */
         scanf("%s", numerao1);
@@ -32,15 +34,15 @@ int main() {
             scanf(" %c", &operador);
         
             tam1 = sanitizeNumerao(numerao1);
-            tam2 = sanitizeNumerao(numerao2);
-            
+            tam2 = sanitizeNumerao(numerao2);        
+    
             switch(operador){
                 case '+': tam3 = soma(numerao1, tam1, numerao2, tam2, numeraoResultado);
                           break;
                 default: printf("Operador invalido!");
             }
             
-            imprimeNumerao(numeraoResultado, tam3);
+            imprimeNumerao(*numeraoResultado, tam3);
             
         } else {
             /* define operador como zero para encerrar aplicacao */
@@ -48,6 +50,9 @@ int main() {
         }
     }
     
+    free(numeraoResultado[0]);
+    free(numeraoResultado);
+
     return 0;
 }
 
@@ -119,10 +124,52 @@ void imprimeNumerao(char numerao[MAX_SIZE], int tam) {
     int n1: tamanho do vetor numerao1
     char numerao2: vetor de char corresponde ao segundo numero
     int n2: tamanho do vetor numerao2
-    char *numeraoResultado: ponteiro de char que contera o resultado da soma
+    char **numeraoResultado: ponteiro de ponteiro de char que contera o resultado da soma
    Retorna:
     int tam: tamanho do numeraoResultado  */
-int soma(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2, char *numeraoResultado) {
-    /*falta implementar */
+int soma(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2, char **numeraoResultado) {
+    int i, tam = 0, calculated = 0, rest = 0;    
+
+    /* define o tamanho preliminar do array */
+    tam = tam1 > tam2 ? tam1 : tam2;
     
+    /* aloca memoria para o array */
+    *numeraoResultado = malloc(tam * sizeof(char));
+    
+    /* verifica se alocacao de memoria foi efetuada */
+    if(*numeraoResultado) {
+        /* percorre ambos os vetores somando e iterando o resto */
+        for(i = 0; i < tam; i++) {
+            calculated = rest;
+            if (i < tam1) {
+                calculated += (numerao1[i] - '0');    
+            }
+            if (i < tam2) {
+                calculated += (numerao2[i] - '0');
+            }
+            if(calculated > 9) {
+                calculated -= 10;
+                rest = 1;
+            } else {
+                rest = 0;
+            }
+            
+            *numeraoResultado[i] = '0' + calculated;   
+        }
+        
+        /* realoca aumentanto o tamanho do vetor para incluir o resto que sobrou */
+        if(rest > 0) {
+            tam++;
+            *numeraoResultado = (char *) realloc(*numeraoResultado, tam * sizeof(char));
+            if(*numeraoResultado) {
+                *numeraoResultado[tam - 1] = '1';
+            }else {
+                return -1;
+            }
+        }
+    } else {
+        return -1;
+    }
+   
+    return tam;
 }
