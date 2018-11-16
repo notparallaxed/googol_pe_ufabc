@@ -190,7 +190,7 @@ int soma(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2) {
    Retorna:
     int tam: novo tamanho do numerao1  */
 int subtracao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2) {
-    int i, j, tam = 0, maior = 0, calculated = 0;
+    int i, j, tam = 0, maior = 1, calculated = 0;
 
     /* define o tamanho preliminar do array e indicar qual é o maior numero (em módulo) */
     if (tam1 > tam2) {
@@ -201,10 +201,15 @@ int subtracao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int ta
         maior = 2;
     } else {
         tam = tam1;
-        if (numerao1[(tam1 - 1)] >= numerao2[(tam2 - 1)]) {
-            maior = 1;
-        } else {
-            maior = 2;
+        /* Definir o maior entre os dois numeros comparando seus algarismos */
+        for (i = (tam - 1); i >= 0; i--) {
+            if (numerao1[i] > numerao2[i]) {
+                maior = 1;
+                break;
+            } else if (numerao2[i] > numerao1[i]) {
+                maior = 2;
+                break;
+            }
         }
     }
 
