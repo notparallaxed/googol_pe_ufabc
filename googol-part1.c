@@ -18,6 +18,8 @@ int sanitizeNumerao(char numerao[MAX_SIZE]);
 
 void imprimeNumerao(char numerao[MAX_SIZE], int tam);
 int soma(char numerao1[MAX_SIZE], int n1, char numerao2[MAX_SIZE], int n2);
+int subtracao(char numerao1[MAX_SIZE], int n1, char numerao2[MAX_SIZE], int n2);
+
 
 int main() {
     char numerao1[MAX_SIZE], numerao2[MAX_SIZE], operador = ' ';
@@ -36,6 +38,8 @@ int main() {
     
             switch(operador){
                 case '+': tam3 = soma(numerao1, tam1, numerao2, tam2);
+                          break;
+                case '-': tam3 = subtracao(numerao1, tam1, numerao2, tam2);
                           break;
                 default: printf("Operador invalido!");
             }
@@ -120,14 +124,14 @@ void imprimeNumerao(char numerao[MAX_SIZE], int tam) {
     char numerao2: vetor de char corresponde ao segundo numero
     int n2: tamanho do vetor numerao2
    Retorna:
-    int tam: tamanho do numeraoResultado  */
+    int tam: novo tamanho do numerao1  */
 int soma(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2) {
     int i, tam = 0, calculated = 0, rest = 0;    
 
     /* define o tamanho preliminar do array */
     tam = tam1 > tam2 ? tam1 : tam2;
 
-    /* verificar se os numeros são ambos positivos ou ambos negativos */
+    /* caso 1: verificar se os numeros são ambos positivos ou ambos negativos */
     if ((numerao1[0] != '-' && numerao2[0] != '-') || (numerao1[0] == '-' && numerao2[0] == '-')) {
         /* verificar se os dois numeros são negativos */
         if (numerao1[0] == '-' && numerao2[0] == '-') {
@@ -160,6 +164,100 @@ int soma(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2) {
             numerao1[tam - 1] = '1';
         }
     }
-    /* caso um dos numeros seja positivo e outro negativo (implementar) */
+    /* caso 2: um dos numeros seja positivo e outro negativo (implementar) */
+    return tam;
+}
+
+/*
+   Recebe: 
+    char numerao1: vetor de char correspondente ao primeiro numero
+    int n1: tamanho do vetor numerao1
+    char numerao2: vetor de char corresponde ao segundo numero
+    int n2: tamanho do vetor numerao2
+   Retorna:
+    int tam: tamanho do novo tamanho do numerao1  */
+int subtracao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2) {
+    int i, j, tam = 0, maior = 0, calculated = 0;
+
+    /* define o tamanho preliminar do array e indicar qual é o maior numero (em módulo) */
+    if (tam1 > tam2) {
+        tam = tam1;
+        maior = 1;
+    } else if (tam2 > tam1) {
+        tam = tam2;
+        maior = 2;
+    } else {
+        tam = tam1;
+        if (numerao1[(tam1 - 1)] >= numerao2[(tam2 - 1)]) {
+            maior = 1;
+        } else {
+            maior = 2;
+        }
+    }
+
+    /* caso 1: verificar se os numeros são ambos positivos */
+    if (numerao1[0] != '-' && numerao2[0] != '-') {
+        /* se o maior numero em modulo for o numerao1 */
+        if (maior == 1) {
+            /* percorre ambos os vetores subtraindo seus algarismos */
+            for (i = 0; i < tam; i++) {
+                calculated = (numerao1[i] - '0');
+                if (i < tam2) {
+                    calculated -= (numerao2[i] - '0');
+                }
+                /* caso o numero precise pegar uma unidade emprestada do casa vizinha */
+                if (calculated < 0) {
+                    j = i + 1;
+                    while (j < tam) {
+                        /* verificar se o algarismo é diferente de zero */
+                        if (numerao1[j] != '0') {
+                            numerao1[j] -= 1;
+                            break;
+                        /* se algarismo igual a zero procurar na casa seguinte*/
+                        } else {
+                            numerao1[j] += 10;
+                            j++;
+                        }
+                    }
+                    numerao1[i] += 10;
+                    calculated = (numerao1[i] - '0');
+                    calculated -= (numerao2[i] - '0');
+                }
+                numerao1[i] = '0' + calculated;
+            }
+        } /* se o maior numero em modulo for o numerao2 */
+        else {
+        /* percorre ambos os vetores subtraindo seus algarismos */
+            for (i = 0; i < tam; i++) {
+                calculated = (numerao2[i] - '0');
+                if (i < tam1) {
+                    calculated -= (numerao1[i] - '0');
+                }
+                if (calculated < 0) {
+                    j = i + 1;
+                    while (j < tam) {
+                        if (numerao2[j] != '0') {
+                            numerao2[j] -= 1;
+                            break;
+                        } else {
+                            numerao2[j] += 10;
+                            j++;
+                        }
+                    }
+                    numerao2[i] += 10;
+                    calculated = (numerao2[i] - '0');
+                    calculated -= (numerao1[i] - '0');
+                }
+                numerao1[i] = '0' + calculated;
+            }
+        }
+    }
+    /* IMPLEMENTAR codigos abaixo */
+    /* procurar e elimimnar zeros a esquerda da contagem do tamanho */
+    
+    
+    /* Inserir o sinal negativo no inicio do numero */
+
+    
     return tam;
 }
