@@ -6,3 +6,8 @@
 
 #Unignore all dirs
 !*/
+
+*.res
+*.out
+*.in
+*.swp
