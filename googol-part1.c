@@ -34,7 +34,7 @@ int main() {
       
            tam1 = sanitizeNumerao(numerao1);
            tam2 = sanitizeNumerao(numerao2);  
-     
+            
            switch(operador){
                case '+': tam3 = soma(numerao1, tam1, numerao2, tam2);
                          break;
@@ -80,12 +80,16 @@ int sanitizeNumerao(char numerao[MAX_SIZE]) {
     if(numerao[0] != '-') {
         /* sera ' ' caso o numero for positivo, assim como aumentara o array */
         numerao[0] = ' ';
-        size++;    
-    }      
-    
-    /* reordena do menos significativo para o mais significativo */
-    for(i = 1; i < size; i++) {
-        numerao[i] = numerao_copy[(size - i) - 1];
+        size++;
+        /* reordena do menos significativo para o mais significativo */
+        for(i = 1; i < size; i++) {
+            numerao[i] = numerao_copy[(size - i) - 1];
+        }    
+    } else {
+        /* somente reordena do menos significativo para o mais significativo */
+        for(i = 1; i < size; i++){
+            numerao[i] = numerao_copy[(size - i)];
+        }     
     }
       
     return size; 
