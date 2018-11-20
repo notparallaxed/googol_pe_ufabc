@@ -288,26 +288,18 @@ int subtracao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int ta
        numerao1[0] = '-';
     }
 
-   /* caso 4: Ambos negativos, segundo se transforma em positivo, recorre o caso 1, segundo numero maior */
-   else{
-      numerao2[0] = ' ';
-      numerao1[0] = ' ';
-      tam = subtracao(numerao2, tam2, numerao1, tam1);
-   }
+    /* caso 4: Ambos negativos, segundo se transforma em positivo, recorre o caso 1, segundo numero maior */
+    else{
+        numerao2[0] = ' ';
+        numerao1[0] = ' ';
+        tam = subtracao(numerao2, tam2, numerao1, tam1);
+        /* salvar resultado no array numerao1 */
+        for(i = 0; i < tam; i++) {
+            numerao1[i] = numerao2[i];
+        }
+    }
+    
+    tam = cleanZeros(numerao1, tam);
 
-      /* procurar e elimimnar zeros a esquerda da contagem do tamanho */
-   for (i = (tam - 1); i >= 1; i--) {
-       /* terminar laço caso encontre um numero diferente de zero */
-       if (numerao1[i] != '0') {
-           break;
-       /* se o ultimo numero é igual a zero */
-       } else if (i == 1) {
-           numerao1[1] = '0';
-       /* se extorem zeros a esquerda remover uma unidade do tamanho */
-       } else {
-           tam--;
-       }
-   }
-
-   return tam;
+    return tam;
 }
