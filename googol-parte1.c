@@ -19,6 +19,7 @@ int sanitizeNumerao(char numerao[MAX_SIZE]);
 void imprimeNumerao(char numerao[MAX_SIZE], int tam);
 int soma(char numerao1[MAX_SIZE], int n1, char numerao2[MAX_SIZE], int n2);
 int subtracao(char numerao1[MAX_SIZE], int n1, char numerao2[MAX_SIZE], int n2);
+int cleanZeros(char numerao[MAX_SIZE], int tam);
 
 int main() {
    char numerao1[MAX_SIZE], numerao2[MAX_SIZE], operador = ' ';
@@ -103,8 +104,9 @@ int sanitizeNumerao(char numerao[MAX_SIZE]) {
    nada    */
 void imprimeNumerao(char numerao[MAX_SIZE], int tam) {
     int i;
-    /* caso o numero negativo, imprime o sinal antes do numero */
-    if(numerao[0] == '-'){
+    /* caso o numero negativo, imprime o sinal antes do numero, 
+       exceto se o numerao for 0 */
+    if(numerao[0] == '-' && !(numerao[1] == '0' && tam == 2) ) {
         printf("%c", numerao[0]);
     }
     /* imprime o numero do mais significativo para o menor */
@@ -114,6 +116,22 @@ void imprimeNumerao(char numerao[MAX_SIZE], int tam) {
 
     printf("\n");
 }
+
+/* Remove zeros a esquerda
+   Recebe:
+    char numerao: vetor de char correspondente ao numerao
+    int tam: inteiro correspondente ao tamanho do numerao
+   Retorna:
+    int tam: inteiro correspondente ao tamanho do novo numerao */
+int cleanZeros(char numerao[MAX_SIZE], int tam) {
+    int i = tam;
+    while(i != 2 && numerao[i - 1] == '0') {
+        i--;
+    }
+    
+    return i;    
+}
+
 
 /*
   Recebe:
@@ -173,6 +191,9 @@ int soma(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2) {
             numerao1[i] = numerao2[i];
         }
     }
+    
+    /* remove os zeros a esquerda, caso houver */ 
+    tam = cleanZeros(numerao1, tam);
     
     return tam;
 }
