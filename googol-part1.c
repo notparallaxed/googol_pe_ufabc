@@ -1,7 +1,7 @@
 /****************************************
 *     Projeto Googol - PE - 2018        *
 *  Gabrielle Arruda  -  11201721761     *
-*             Luigi Perillo             *
+*     Luigi Perillo - 11201722471       *
 *           Vinicius Teixeira           *
 *****************************************/
 #include <stdio.h>
@@ -104,7 +104,7 @@ void imprimeNumerao(char numerao[MAX_SIZE], int tam) {
         printf("%c", numerao[0]);
     }
     /* imprime o numero do mais significativo para o menor */
-    for(i = 0; i < tam; i++) {
+    for(i = 1; i < tam; i++) {
           printf("%c", numerao[tam - i]);
     }
 
@@ -182,7 +182,7 @@ int soma(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2) {
   Retorna:
    int tam: novo tamanho do numerao1  */
 int subtracao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2) {
-    int i, j, tam = 0, maior = -1, calculated = 0;
+    int i, j, tam = 0, maior = 1, calculated = 0;
 
     /* define o tamanho preliminar do array e indicar qual é o maior numero (em módulo) */
     if (tam1 > tam2) {
@@ -195,11 +195,15 @@ int subtracao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int ta
         tam = tam1;
         /* Definir o maior entre os dois numeros comparando seus algarismos */
         i = tam - 1;
-        while (i != 0 && maior == -1) {
+        while (i != 0) {
            if (numerao1[i] > numerao2[i]) {
                maior = 1;
+               break;
            } else if (numerao2[i] > numerao1[i]) {
                maior = 2;
+               break;
+           } else {
+               i--;
            }
        }
     }
@@ -224,7 +228,7 @@ int subtracao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int ta
                             break;
                         /* se algarismo igual a zero procurar na casa seguinte*/
                         } else {
-                            numerao1[j] += 10;
+                            numerao1[j] = '9'; /* Adicionar 10 e subtrair 1 emprestado */
                             j++;
                         } 
                     }
@@ -267,13 +271,13 @@ int subtracao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int ta
    }
 
       /* procurar e elimimnar zeros a esquerda da contagem do tamanho */
-   for (i = (tam - 1); i >= 0; i--) {
+   for (i = (tam - 1); i >= 1; i--) {
        /* terminar laço caso encontre um numero diferente de zero */
        if (numerao1[i] != '0') {
            break;
        /* se o ultimo numero é igual a zero */
-       } else if (i == 0) {
-           numerao1[0] = '0';
+       } else if (i == 1) {
+           numerao1[1] = '0';
        /* se extorem zeros a esquerda remover uma unidade do tamanho */
        } else {
            tam--;
