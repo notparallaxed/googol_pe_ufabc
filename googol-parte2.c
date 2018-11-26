@@ -20,7 +20,9 @@ int sanitizeNumerao(char numerao[MAX_SIZE]);
 void imprimeNumerao(char numerao[MAX_SIZE], int tam);
 int soma(char numerao1[MAX_SIZE], int n1, char numerao2[MAX_SIZE], int n2);
 int subtracao(char numerao1[MAX_SIZE], int n1, char numerao2[MAX_SIZE], int n2);
+int multiplicacao(char numerao1[MAX_SIZE], int n1, char numerao2[MAX_SIZE], int n2);
 int cleanZeros(char numerao[MAX_SIZE], int tam);
+int addZero(char numerao[MAX_SIZE], int tam);
 
 int main() {
    char numerao1[MAX_SIZE], numerao2[MAX_SIZE], operador = ' ';
@@ -38,11 +40,13 @@ int main() {
            tam2 = sanitizeNumerao(numerao2);  
             
            switch(operador){
-               case '+': tam3 = soma(numerao1, tam1, numerao2, tam2);
+                case '+': tam3 = soma(numerao1, tam1, numerao2, tam2);
                          break;
-               case '-': tam3 = subtracao(numerao1, tam1, numerao2, tam2);
+                case '-': tam3 = subtracao(numerao1, tam1, numerao2, tam2);
                          break;
-               default: printf("Operador invalido!");
+                case '*': tam3 = multiplicacao(numerao1, tam1, numerao2, tam2);
+                         break;
+                default: printf("Operador invalido!");
            }
           
            imprimeNumerao(numerao1, tam3);
@@ -133,6 +137,26 @@ int cleanZeros(char numerao[MAX_SIZE], int tam) {
     return i;    
 }
 
+/* Acresenta um zero no numero
+   Recebe:
+    char numerao:  ponteiro de vetor de char correspondente ao numerao
+    int tam: inteiro correspondente ao tamanho do numerao
+   Retorna:
+    int tam: inteiro correspondente ao tamanho do novo numerao */
+int addZero(char numerao[MAX_SIZE], int tam) {
+    int i;
+    char cache;
+    /* Acresentar uma unidade no tamanho e inserir o zero na posição final */
+    tam++;
+    numerao[(tam - 1)] = '0';
+    /* Percorrer o  numerão colocando o zero na posição inicial */
+    for (i = tam - 1; i > 1; i--) {
+        cache = numerao[(i - 1)];
+        numerao[(i - 1)] = numerao[i];
+        numerao[i] = cache;
+    }
+    return tam;
+}
 
 /*
   Recebe:
@@ -303,4 +327,60 @@ int subtracao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int ta
     tam = cleanZeros(numerao1, tam);
 
     return tam;
+}
+
+/*
+  Recebe:
+   char numerao1: vetor de char correspondente ao primeiro numero
+   int n1: tamanho do vetor numerao1
+   char numerao2: vetor de char corresponde ao segundo numero
+   int n2: tamanho do vetor numerao2
+  Retorna:
+   int tam: novo tamanho do numerao1  */
+int multiplicacao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2){
+    int i, tamcopy, vezes;
+    char sinal, *numeraocopy;
+    /* Verificar os sinais */
+    if((numerao1[0] == '-' && numerao2[0] == '-') || (numerao1[0] != '-' && numerao2[0] != '-')) {
+        sinal = '+';
+    } else {
+        sinal = '-';
+    }
+    /* Remover os sinais para evitar conflitos no calculo */
+    numerao1[0] = ' ';
+    numerao2[0] = ' ';
+    /* Copiar o Numerão 2 para o ponteiro */
+    numeraocopy = malloc(MAX_SIZE * sizeof(char));
+    tamcopy = tam2;
+    for (i = 1; i < tam2; i++) {
+        numeraocopy[i] = numerao2[i];
+    }
+    /* Copiar o numerao 1 para o numerao 2 */
+    tam2 = tam1;
+    for (i = 1; i < tam1; i++) {
+        numerao2[i] = numerao1[i];
+    }
+    /* Zerar o Numerão 1 */
+    numerao1[1] = '0';
+    tam1 = 2;
+    /* Operação de multiplicação: somar o numerao 1 por numerao 2 vezes */
+    for (i = 1; i < tamcopy; i++) {
+        vezes = numeraocopy[i] - '0';
+        /* Somar o numero de vezes necessario do algarismo */
+        while (vezes > 0) {
+            tam1 = soma(numerao1, tam1, numerao2, tam2);
+            vezes--;
+        }
+        /* Multiplicar a copia do numerao 1 por 10 (Adicionar um zero) */
+        tam2 = addZero(numerao2, tam2);
+    }
+    /* Liberar copia do numerao */
+    free(numeraocopy);
+    /* Colocar o sinal no numerao final */
+    if (sinal == '+') {
+        numerao1[0] = ' ';
+    } else {
+        numerao1[0] = '-';
+    }
+    return tam1;
 }
