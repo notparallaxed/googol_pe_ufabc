@@ -350,7 +350,7 @@ int multiplicacao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], in
     numerao1[0] = ' ';
     numerao2[0] = ' ';
     /* Copiar o Numerão 2 para o ponteiro */
-    numeraocopy = malloc(MAX_SIZE * sizeof(char));
+    numeraocopy = malloc(tam2 * sizeof(char));
     tamcopy = tam2;
     for (i = 1; i < tam2; i++) {
         numeraocopy[i] = numerao2[i];
