@@ -462,6 +462,7 @@ int divide(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2)
             /* Preparar a proxima casa do algarismo dinamico */
             tamdin = addZero(numerodin, tamdin);
             numerodin[1] = numerao1[pos];
+            tamdin = cleanZeros(numerodin, tamdin);
             pos--;
         } while (pos >= 0);
     /* Caso o numerao 2 tenha mais algarismops que o numerão 1 ele tem resultado zero */
