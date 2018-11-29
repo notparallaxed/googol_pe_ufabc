@@ -21,6 +21,8 @@ void imprimeNumerao(char numerao[MAX_SIZE], int tam);
 int soma(char numerao1[MAX_SIZE], int n1, char numerao2[MAX_SIZE], int n2);
 int subtracao(char numerao1[MAX_SIZE], int n1, char numerao2[MAX_SIZE], int n2);
 int multiplicacao(char numerao1[MAX_SIZE], int n1, char numerao2[MAX_SIZE], int n2);
+int resto(char numerao1[MAX_SIZE], int n1, char numerao2[MAX_SIZE], int n2);
+int divide(char numerao1[MAX_SIZE], int n1, char numerao2[MAX_SIZE], int n2);
 int cleanZeros(char numerao[MAX_SIZE], int tam);
 int addZero(char numerao[MAX_SIZE], int tam);
 
@@ -45,6 +47,10 @@ int main() {
                 case '-': tam3 = subtracao(numerao1, tam1, numerao2, tam2);
                          break;
                 case '*': tam3 = multiplicacao(numerao1, tam1, numerao2, tam2);
+                         break;
+                case '/': tam3 = divide(numerao1, tam1, numerao2, tam2);
+                         break;
+                case '%': tam3 = resto(numerao1, tam1, numerao2, tam2);
                          break;
                 default: printf("Operador invalido!");
            }
@@ -376,6 +382,152 @@ int multiplicacao(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], in
     }
     /* Liberar copia do numerao */
     free(numeraocopy);
+    /* Colocar o sinal no numerao final */
+    if (sinal == '+') {
+        numerao1[0] = ' ';
+    } else {
+        numerao1[0] = '-';
+    }
+    return tam1;
+}
+
+/*
+  Recebe:
+   char numerao1: vetor de char correspondente ao primeiro numero
+   int n1: tamanho do vetor numerao1
+   char numerao2: vetor de char corresponde ao segundo numero
+   int n2: tamanho do vetor numerao2
+  Retorna:
+   int tam: novo tamanho do numerao1  */
+int divide(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2){
+    int i, j, tamdin, tamres, tamcpy, pos, calculated;
+    char sinal, *numerodin, *resultado, *numerocpy;
+    /* Verificar os sinais */
+    if((numerao1[0] == '-' && numerao2[0] == '-') || (numerao1[0] != '-' && numerao2[0] != '-')) {
+        sinal = '+';
+    } else {
+        sinal = '-';
+    }
+    /* Remover os sinais para evitar conflitos no calculo */
+    numerao1[0] = ' ';
+    numerao2[0] = ' ';
+    /* Alocação de espaço dos ponteiros de vetores */
+    numerodin = malloc(MAX_SIZE * sizeof(char));
+    resultado = malloc(MAX_SIZE * sizeof(char));
+    numerocpy = malloc(tam2 * sizeof(char));
+    /* Fazer uma copia do numerao 2 para um ponteiro de um vetor */
+    tamcpy = tam2;
+    for (i = 0; i < tam2; i++) {
+        numerocpy[i] = numerao2[i];
+    }
+    /* Caso o numerão 2 tenha menos ou o mesmo numero de algarismos do que o numerão 1*/
+    if(tam2 <= tam1) {
+        tamdin = tam2;
+        tamres = 1;
+        /* Criação do numero dinamico - os tam2 primeiros algarismos do numero */
+        numerodin[0] = ' ';
+        /* Definir posição da proxima casa que desce */
+        pos = tam1 - tamdin;
+        j = 1;
+        /* Laço para inserir os elementos no numero dinamico */
+        for (i = (pos + 1); i < tam1; i++) {
+            numerodin[j] = numerao1[i];
+            j++;
+        }
+        /* Realizar as operações enquanto a posição é valida */
+        do {
+            /* Vezes em que foi realizado a subtração */
+            calculated = 0;
+            /* Subtrair até o numero ficar negativo */
+            while(numerodin[0] != '-') {
+                tamdin = subtracao(numerodin, tamdin, numerocpy, tamcpy);
+                calculated++;
+            }
+            /* Copiar o nuemro 2 para o vetor de copia novamente para a proxima operação */
+            tamcpy = tam2;
+            for (i = 0; i < tam2; i++) {
+                numerocpy[i] = numerao2[i];
+            }
+            /* Somar uma unidade para obter o resto */
+            tamdin = soma(numerodin, tamdin, numerao2, tam2);
+            calculated--;
+            /* Copiar o nuemro 2 para o vetor de copia novamente para a proxima operação */
+            tam2 = tamcpy;
+            for (i = 0; i < tamcpy; i++) {
+                numerao2[i] = numerocpy[i];
+            }
+            /* Colocar o resultado no vetor */
+            tamres++;
+            resultado[(tamres - 1)] = calculated + '0';
+            /* Preparar a proxima casa do algarismo dinamico */
+            tamdin = addZero(numerodin, tamdin);
+            numerodin[1] = numerao1[pos];
+            pos--;
+        } while (pos >= 0);
+    /* Caso o numerao 2 tenha mais algarismops que o numerão 1 ele tem resultado zero */
+    } else {
+        tamres = 2;
+        resultado[1] = '0';
+    } /* Liberar espaço dos vetores utilizados */
+    free(numerocpy);
+    free(numerodin);
+    /* Copiar o resultado para o numerão 1 e liberar o vetor resultado */
+    tam1 = tamres;
+    for (i = 1; i < tamres; i++) {
+        numerao1[i] = resultado[(tamres - i)];
+    }
+    free(resultado);
+    /* Retirar zeros a esquerda */
+    tam1 = cleanZeros(numerao1, tam1);
+    /* Colocar o sinal no numerao final */
+    if (sinal == '+') {
+        numerao1[0] = ' ';
+    } else {
+        numerao1[0] = '-';
+    }
+    return tam1;
+}
+
+/*
+  Recebe:
+   char numerao1: vetor de char correspondente ao primeiro numero
+   int n1: tamanho do vetor numerao1
+   char numerao2: vetor de char corresponde ao segundo numero
+   int n2: tamanho do vetor numerao2
+  Retorna:
+   int tam: novo tamanho do numerao1  */
+int resto(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2){
+    int i, tamcpy1, tamcpy2;
+    char sinal, *numerocpy1, *numerocpy2;
+    /* Verificar os sinais */
+    if((numerao1[0] == '-' && numerao2[0] == '-') || (numerao1[0] != '-' && numerao2[0] != '-')) {
+        sinal = '+';
+    } else {
+        sinal = '-';
+    }
+    /* Remover os sinais para evitar conflitos no calculo */
+    numerao1[0] = ' ';
+    numerao2[0] = ' ';
+    /* Copiar o numerão 1 para um ponteiro de vetor */
+    numerocpy1 = malloc(MAX_SIZE * sizeof(char));
+    tamcpy1 = tam1;
+    for (i = 0; i < tam1; i++) {
+        numerocpy1[i] = numerao1[i];
+    }
+    /* Copiar o numerão 2 para um ponteiro de vetor */
+    numerocpy2 = malloc(tam2 * sizeof(char));
+    tamcpy2 = tam2;
+    for (i = 0; i < tam2; i++) {
+        numerocpy2[i] = numerao2[i];
+    }
+    /* Dividir o numero e multiplicar para opter o valor inteiro */
+    tamcpy1 = divide(numerocpy1, tamcpy1, numerocpy2, tamcpy2);
+    tam2 = multiplicacao(numerao2, tam2, numerocpy1, tamcpy1);
+    /* Liberar as cópias dos ponteiros de vetores */
+    free(numerocpy1);
+    free(numerocpy2);
+    /* Subtrair o numerão 1 com o numero inteiro da multiplicação para obter o resto */
+    tam1 = subtracao(numerao1, tam1, numerao2, tam2);
     /* Colocar o sinal no numerao final */
     if (sinal == '+') {
         numerao1[0] = ' ';
