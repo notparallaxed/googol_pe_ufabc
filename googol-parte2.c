@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_SIZE 1003
+#define MAX_SIZE 2003
 
 int sanitizeNumerao(char numerao[MAX_SIZE]);
 
@@ -501,11 +501,7 @@ int resto(char numerao1[MAX_SIZE], int tam1, char numerao2[MAX_SIZE], int tam2){
     int i, tamcpy1, tamcpy2;
     char sinal, *numerocpy1, *numerocpy2;
     /* Verificar os sinais */
-    if((numerao1[0] == '-' && numerao2[0] == '-') || (numerao1[0] != '-' && numerao2[0] != '-')) {
-        sinal = '+';
-    } else {
-        sinal = '-';
-    }
+    sinal = numerao1[0] == ' ' ? '+' : '-'; 
     /* Remover os sinais para evitar conflitos no calculo */
     numerao1[0] = ' ';
     numerao2[0] = ' ';
